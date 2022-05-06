@@ -11,6 +11,16 @@
 <p>git clone --recurse-submodules <a href="https://github.com/mdecourse/newcms.git">https://github.com/mdecourse/newcms.git</a></p>
 <h1>Week1~9</h1>
 <p></p>
+<h6>IPV6設定</h6>
+<h6>利用<span> </span><a href="https://www.debugmode.com/wink/">Wink</a><span> </span>建立電腦操作流程影片時, 必須注意:</h6>
+<ol>
+<li>可以與 ShareX 共用<span> </span><a href="https://www.ffmpeg.org/download.html#build-windows">ffmpeg.exe</a>.</li>
+<li>為了讓影片能在手機觀看, video 標註中必須帶有 autoplay 與 controls 屬性.</li>
+<li>video 標註的大小必須與<span> </span><a href="https://www.debugmode.com/wink/">Wink</a><span> </span>專案檔中的設定相符, 合適的尺寸大小: width="1008" height="630".</li>
+<li>以下<span> </span><a href="https://www.debugmode.com/wink/">Wink</a><span> </span>影片設定超文件檔案:<span> </span><a href="https://mde.tw/wcm2022_guide/downloads/wink_script_and_setup.txt">wink_script_and_setup.txt</a></li>
+</ol>
+<p><span><video autoplay="autoplay" class="winkVideoClass" controls="controls" data-dirname="/static" data-varname="winkVideoData" height="630" muted="true" width="1008">
+<source src="/downloads/wcm_w2_2.mp4" type="video/mp4"/></video></span></p>
 <p><span>建立新倉儲以及設定SSH資料</span></p>
 <p><strong><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/0zhIHZCtum8" width="560"></iframe></strong></p>
 <h1>設定 nginx</h1>
@@ -98,7 +108,8 @@ var winkVideoData = {
 <div class="winkVideoControlBarProgressThumbClass"></div>
 </div>
 <div class="winkVideoPlayOverlayClass"></div>
-</div><h1>查驗 nginx 數位簽章</h1>
+</div>
+<h1>查驗 nginx 數位簽章</h1>
 <p>&lt;script&gt;// &lt;![CDATA[<br/>var winkVideoData = {<br/> dataVersion: 1,<br/> frameRate: 10,<br/> buttonFrameLength: 5,<br/> buttonFrameOffset: 2,<br/> frameStops: {<br/> },<br/>};<br/>// ]]&gt;&lt;/script&gt;<br/>&lt;!-- 接下來將 mp4 檔案從 downloads 目錄取出 --&gt;<br/>&lt;div class="winkVideoContainerClass"&gt;&lt;video width="1008" height="630" autoplay="autoplay" class="winkVideoClass" controls="controls" data-dirname="/static" data-varname="winkVideoData" muted="true"&gt;<br/>&lt;source src="./../downloads/nginx.mp4" type="video/mp4" /&gt;&lt;/video&gt;<br/>&lt;div class="winkVideoOverlayClass"&gt;&lt;/div&gt;<br/>&lt;div class="winkVideoControlBarClass"&gt;&lt;button class="winkVideoControlBarPlayButtonClass"&gt;&lt;/button&gt; &lt;button class="winkVideoControlBarPauseButtonClass"&gt;&lt;/button&gt;<br/>&lt;div class="winkVideoControlBarProgressLeftClass"&gt;&lt;/div&gt;<br/>&lt;div class="winkVideoControlBarProgressEmptyMiddleClass"&gt;&lt;/div&gt;<br/>&lt;div class="winkVideoControlBarProgressRightClass"&gt;&lt;/div&gt;<br/>&lt;div class="winkVideoControlBarProgressFilledMiddleClass"&gt;&lt;/div&gt;<br/>&lt;div class="winkVideoControlBarProgressThumbClass"&gt;&lt;/div&gt;<br/>&lt;/div&gt;<br/>&lt;div class="winkVideoPlayOverlayClass"&gt;&lt;/div&gt;<br/>&lt;/div&gt;</p>
 <h1>Develop</h1>
 <p><a href="https://github.com/mdecourse/cmsimde">https://github.com/mdecourse/cmsimde</a> 的開發, 可以在一個目錄中放入 cmsimde, 然後將 up_dir 中的內容放到與 cmsimde 目錄同位階的地方, 使用 command 進入 cmsimde 目錄, 執行 python wsgi.py, 就可以啟動, 以瀏覽器 https://localhost:9443 就可以連接, 以 admin 作為管理者密碼, 就可以登入維護內容.</p>
