@@ -11,6 +11,246 @@
 <p>git clone --recurse-submodules <a href="https://github.com/mdecourse/newcms.git">https://github.com/mdecourse/newcms.git</a></p>
 <h1>Week1~9</h1>
 <p></p>
+<pre class="brush:py;auto-links:false;toolbar:false" contenteditable="false"># from https://levelup.gitconnected.com/writing-tetris-in-python-2a16bddb5318
+# 暫時關閉 system proxy 設定後,  pip install pygame
+#import pygame
+import random
+# 以下為 Brython 新增
+from browser import document as doc
+from browser import html
+import browser.timer
+
+# 利用 html 建立一個 CANVAS 標註物件, 與變數 canvas 對應
+canvas = html.CANVAS(width = 400, height = 500, id="canvas")
+brython_div = doc["brython_div"]
+brython_div &lt;= canvas
+ctx = canvas.getContext("2d")
+
+colors = [
+    (0, 0, 0),
+    (120, 37, 179),
+    (100, 179, 179),
+    (80, 34, 22),
+    (80, 134, 22),
+    (180, 34, 22),
+    (180, 34, 122),
+]
+
+
+class Figure:
+    x = 0
+    y = 0
+
+    figures = [
+        [[1, 5, 9, 13], [4, 5, 6, 7]],
+        [[4, 5, 9, 10], [2, 6, 5, 9]],
+        [[6, 7, 9, 10], [1, 5, 6, 10]],
+        [[1, 2, 5, 9], [0, 4, 5, 6], [1, 5, 9, 8], [4, 5, 6, 10]],
+        [[1, 2, 6, 10], [5, 6, 7, 9], [2, 6, 10, 11], [3, 5, 6, 7]],
+        [[1, 4, 5, 6], [1, 4, 5, 9], [4, 5, 6, 9], [1, 5, 6, 9]],
+        [[1, 2, 5, 6]],
+    ]
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.type = random.randint(0, len(self.figures) - 1)
+        self.color = random.randint(1, len(colors) - 1)
+        self.rotation = 0
+
+    def image(self):
+        return self.figures[self.type][self.rotation]
+
+    def rotate(self):
+        self.rotation = (self.rotation + 1) % len(self.figures[self.type])
+    
+    def rotate1(self):
+        self.rotation = (self.rotation - 1) % len(self.figures[self.type])
+
+class Tetris:
+    level = 2
+    score = 0
+    state = "start"
+    field = []
+    height = 0
+    width = 0
+    x = 100
+    y = 60
+    zoom = 20
+    figure = None
+
+    def __init__(self, height, width):
+        self.height = height
+        self.width = width
+        self.field = []
+        self.score = 0
+        self.state = "start"
+        for i in range(height):
+            new_line = []
+            for j in range(width):
+                # 起始時每一個都填入 0
+                new_line.append(0)
+            self.field.append(new_line)
+
+    def new_figure(self):
+        self.figure = Figure(3, 0)
+
+    def intersects(self):
+        intersection = False
+        for i in range(4):
+            for j in range(4):
+                if i * 4 + j in self.figure.image():
+                    # block 到達底部, 左右兩邊界, 或該座標有其他 block
+                    if i + self.figure.y &gt; self.height - 1 or \
+                            j + self.figure.x &gt; self.width - 1 or \
+                            j + self.figure.x &lt; 0 or \
+                            self.field[i + self.figure.y][j + self.figure.x] &gt; 0:
+                        intersection = True
+        return intersection
+
+    def break_lines(self):
+        lines = 0
+        for i in range(1, self.height):
+            zeros = 0
+            for j in range(self.width):
+                if self.field[i][j] == 0:
+                    zeros += 1
+            if zeros == 0:
+                lines += 1
+                for i1 in range(i, 1, -1):
+                    for j in range(self.width):
+                        self.field[i1][j] = self.field[i1 - 1][j]
+        self.score += lines ** 2
+
+    def go_space(self):
+        while not self.intersects():
+            self.figure.y += 1
+        self.figure.y -= 1
+        self.freeze()
+
+    def go_down(self):
+        self.figure.y += 1
+        if self.intersects():
+            self.figure.y -= 1
+            self.freeze()
+
+    def freeze(self):
+        for i in range(4):
+            for j in range(4):
+                if i * 4 + j in self.figure.image():
+                    self.field[i + self.figure.y][j + self.figure.x] = self.figure.color
+        self.break_lines()
+        self.new_figure()
+        if self.intersects():
+            self.state = "gameover"
+
+    def go_side(self, dx):
+        old_x = self.figure.x
+        self.figure.x += dx
+        if self.intersects():
+            self.figure.x = old_x
+
+    def rotate(self):
+        old_rotation = self.figure.rotation
+        self.figure.rotate()
+        if self.intersects():
+            self.figure.rotation = old_rotation
+            
+    def rotate1(self):
+        old_rotation = self.figure.rotation
+        self.figure.rotate1()
+        if self.intersects():
+            self.figure.rotation = old_rotation
+
+# Define some colors
+# from https://stackoverflow.com/questions/3380726/converting-a-rgb-color-tuple-to-a-six-digit-code
+BLACK = '#%02x%02x%02x' % (0, 0, 0)
+WHITE = '#%02x%02x%02x' % (255, 255, 255)
+GRAY = '#%02x%02x%02x' % (128, 128, 128)
+
+done = False
+fps = 60
+game = Tetris(20, 10)
+counter = 0
+
+pressing_down = False
+
+def key_down(eve):
+    key = eve.keyCode
+    #if event.type == pygame.QUIT:
+    # 32 is pause
+    if key == 32:
+        done = True
+    # 88 is x key to clockwise rotate
+    if key == 88:
+        game.rotate1()
+    # 90 is z key to anticlockwise rotate
+    if key == 90:
+        game.rotate()
+    # 67 is c key to drop -1 on the y-axis
+    if key == 67:
+        game.go_down()
+    # 40 is down key
+    if key == 40:
+        pressing_down = True
+    # 37 is left key
+    if key == 37:
+        game.go_side(-1)
+    # 39 is right key
+    if key == 39:
+        game.go_side(1)
+    # 32 is space key to move block to bottom
+    if key == 32:
+        game.go_space()
+    # 27 is escape
+    # reset the game
+    if key == 27:
+        game.__init__(20, 10)
+
+def key_up(eve):
+    key = eve.keyCode
+    # 40 is down key
+    if key == 40:
+        pressing_down = False
+
+#while not done:
+def do_game():
+    global counter
+    if game.figure is None:
+        game.new_figure()
+    counter += 1
+    if counter &gt; 100000:
+        counter = 0
+    if counter % (fps // game.level // 2) == 0 or pressing_down:
+        if game.state == "start":
+            game.go_down()
+    
+    for i in range(game.height):
+        for j in range(game.width):
+            ctx.fillStyle = WHITE
+            #ctx.scale(game.zoom, game.zoom)
+            ctx.fillRect(game.x + game.zoom * j, game.y + game.zoom * i, game.zoom, game.zoom)
+            if game.field[i][j] &gt; 0:
+                ctx.fillStyle = '#%02x%02x%02x' % colors[game.field[i][j]]
+                ctx.fillRect(game.x + game.zoom * j + 1, game.y + game.zoom * i + 1, game.zoom - 2, game.zoom - 1)
+            ctx.lineWidth = 1
+            ctx.strokeStyle = GRAY
+            ctx.beginPath()
+            ctx.rect(game.x + game.zoom * j, game.y + game.zoom * i, game.zoom, game.zoom)
+            ctx.stroke()
+    if game.figure is not None:
+        for i in range(4):
+            for j in range(4):
+                p = i * 4 + j
+                if p in game.figure.image():
+                    ctx.fillStyle = '#%02x%02x%02x' % colors[game.figure.color]
+                    ctx.fillRect(game.x + game.zoom * (j + game.figure.x) + 1,
+                                      game.y + game.zoom * (i + game.figure.y) + 1,
+                                      game.zoom - 2, game.zoom - 2)
+
+doc.addEventListener("keydown", key_down)
+doc.addEventListener("keyup", key_up)
+browser.timer.set_interval(do_game, fps)</pre>
 <h6>IPV6設定</h6>
 <h6>利用<span> </span><a href="https://www.debugmode.com/wink/">Wink</a><span> </span>建立電腦操作流程影片時, 必須注意:</h6>
 <ol>
@@ -23,7 +263,184 @@
 <source src="/downloads/wcm_w2_2.mp4" type="video/mp4"/></video></span></p>
 <p><span>建立新倉儲以及設定SSH資料</span></p>
 <p><strong><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/0zhIHZCtum8" width="560"></iframe></strong></p>
-<h1>設定 nginx</h1>
+<h1>W13</h1>
+<script src="/static/brython.js"></script>
+<script src="/static/brython_stdlib.js"></script>
+<script>
+window.onload=function(){brython();}
+</script>
+<div id="print">w13作業</div>
+<script type="text/python3">
+# 這個程式用於 demo 綠色方塊沿著特定網格路徑行走
+# 從 Brython 程式庫中的 browser 模組導入 document 類別, 並以簡寫設定為 doc
+from browser import document as doc
+# 從 browser 模組導入 html 類別, 主要用於建立 CANVAS 標註物件, 並插入頁面中
+from browser import html
+# 用於定時執行特定函式
+import browser.timer
+# 導入亂數模組
+from random import random, randint
+
+# 利用 html 建立一個 CANVAS 標註物件, 與變數 canvas 對應
+canvas = html.CANVAS(width = 600, height = 600)
+# 將 canvas 標註的 id 設為 "canvas"
+canvas.id = "canvas"
+# 將 document 中 id 為 "brython_div" 的標註 
+# 設為與 brython_div 變數對應
+brython_div = doc["brython_div"]
+# 將 canvas 標註放入 brython_div 所在位置
+# 頁面中原本就已經放入 <div id="brython_div"></div> 標註
+brython_div <= canvas
+# 將頁面中 id 為 canvas 的 CANVAS 設為與 canvas 變數對應
+canvas = doc["canvas"]
+# 將 canvas 的 2d 繪圖 context 命名為 ctx
+ctx = canvas.getContext("2d")
+
+# 建立一個 dRect() 函式
+# s default 為 1, c defaul 為紅色
+def dRect(lux, luy, w, h, s=1, c='#ff0000'):
+    ctx.lineWidth = s
+    ctx.strokeStyle = c
+    ctx.beginPath();
+    ctx.rect(lux, luy, w, h)
+    ctx.stroke();
+    
+# 建立畫直線函式
+def draw_line(x1, y1, x2, y2, color="#ff0000"):
+    ctx.beginPath()
+    ctx.moveTo(x1, y1)
+    ctx.lineTo(x2, y2)
+    ctx.strokeStyle = color
+    ctx.stroke()
+
+# 建立 write Text 函式
+def wText(x, y, t, s=14, c='#0000ff'):
+    ctx.font = str(s) + "px Arial";
+    ctx.fillText(t, x, y)
+
+# 定義畫格線的函式
+def grid(startx, starty, w, h, wnum, hnum, pixel=1, color="#ff0000"):
+    # 利用迴圈與座標增量繪圖
+    # 因為輸入 wnum 與 hnum 為格子數, 畫格線數則需加上 1
+    for i in range(wnum+1):
+        for j in range(hnum+1):
+            # 畫上下直線
+            yend = starty + h*(hnum)
+            xend = startx + w*(wnum)
+            x = startx + i*w
+            draw_line(x, starty, x, yend, color)
+            # 畫左右直線
+            y = starty + j*h
+            draw_line(startx, y, xend, y, color)
+            #wText(w/2-10, y-w/2, str(j))
+
+# 從兩個座標點求中心點座標
+def center(lx, ly, rx, ry):
+    # lx is x coord of the left up corner
+    # rx is the x coord of th right down corner
+    x = (lx + rx)/2
+    y = (ly + ry)/2
+    return x, y
+    
+# 畫出填色方塊
+def draw_rect(gx, gy, gw, gh, color="lime"):
+    # gx is the grid coord at x direction
+    # gy is the grid coord at y direction
+    # gw is the with of the green rect
+    # gh is the height of the green rect
+    lx = origx + (gx-1)*w
+    ly = origy + (gy-1)*h
+    rx = origx + gx*w
+    ry = origy + gy*h
+    cx, cy = center(lx, ly, rx, ry)
+    # glx is the x coord of the left corner
+    # gly is the y coord of the left corner
+    glx = cx - gw/2
+    gly = cy - gh/2
+    # 利用設定的顏色值畫出 rectangle
+    ctx.fillStyle = color
+    ctx.fillRect(glx, gly, gw, gh)
+
+# 以白色覆蓋位於 (nowx, nowy) 
+# 且比目標方塊長寬各大於 1 pixel的方塊
+def wipe():
+    draw_rect(nowx, nowy, 30+1, 30+1, color="white")
+
+# 畫出位於 (nowx, nowy) 的綠色方塊
+def draw():
+    draw_rect(nowx, nowy, 30, 30, color="lime")
+
+# 繞著外圍行走
+def walk():
+    global stepx, stepy
+    # 向下
+    if nowy < hnum and nowx == 1:
+        stepx = 0
+        stepy = 1
+    # 向右
+    elif nowx < wnum and nowy == hnum:
+        stepx = 1
+        stepy = 0
+    # 向上
+    elif nowy == hnum and nowx == wnum:
+        stepx = 0
+        stepy = -1
+    # 向左
+    elif nowx == wnum and nowy == 1:
+        stepx = -1
+        stepy = 0
+        
+# 每隔短暫時間即呼叫執行一次的函式
+def game():
+    # 因 nowx 與 nowy 在函式外宣告
+    # 且在函式內改變對應值, 因此需宣告為 global
+    global nowx, nowy
+    walk()
+    wipe()
+    nowx += stepx
+    nowy += stepy
+    draw()
+
+# 綠色方塊起點座標與 x 及 y 方向的座標增量
+nowx = 1
+nowy = 1
+stepx = 0
+stepy = 0
+# 設定格數
+# width 方向格子數
+wnum = 15
+# height 方向格子數
+hnum = 15
+# 設定線寬
+pixel = 1
+# 設定 w 寬度
+w = int(canvas.width/wnum) - pixel
+# 設定 h 高度
+h = int(canvas.height/hnum) - pixel
+# 設定繪圖座標點起點位置
+origx = 1
+origy = 1
+# 利用 grid 函式畫出格線
+grid(origx, origy, w, h, wnum, hnum, pixel=1, color="black")
+
+'''
+# 利用 draw_rect 以 grid 座標畫出正方形, 內建為 lime
+draw_rect(3, 3, 30, 30)
+
+# 利用隨機亂數產生五個紅色方塊
+# wnum 與 hnum 為 x 與 y 方向的格子個數
+# w 與 h 方向上的方塊 pixel 數
+wrect_size = 30
+hrect_size = 30
+# 利用 for 迴圈產生五個紅色方塊
+for i in range(5):
+    xcoord = randint(1, wnum)
+    ycoord = randint(1, hnum)
+    draw_rect(xcoord, ycoord, wrect_size, hrect_size, color="red")
+'''
+browser.timer.set_interval(game, 100)
+</script>
+<div id="brython_div"></div><h1>設定 nginx</h1>
 <p>Nginx 設定為 WWW 網際下載主機:</p>
 <p>nginx.conf</p>
 <div>
