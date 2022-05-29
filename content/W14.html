@@ -139,93 +139,155 @@ img.add_border {
           </div>
           
         </header>
-    <div id="tipue_search_content">W14 << <a href='W14.html'>Previous</a> <a href='查驗 nginx 數位簽章.html'>Next</a> >> 查驗 nginx 數位簽章<br /><h1>設定 nginx</h1>
-<p>Nginx 設定為 WWW 網際下載主機:</p>
-<p>nginx.conf</p>
-<div>
-<div class="syntaxhighlighter js" id="highlighter_310726">
-<table border="0" cellpadding="0" cellspacing="0">
-<tbody>
-<tr>
-<td class="gutter">
-<div class="line number1 index0 alt2">1</div>
-<div class="line number2 index1 alt1">2</div>
-<div class="line number3 index2 alt2">3</div>
-<div class="line number4 index3 alt1">4</div>
-<div class="line number5 index4 alt2">5</div>
-<div class="line number6 index5 alt1">6</div>
-<div class="line number7 index6 alt2">7</div>
-<div class="line number8 index7 alt1">8</div>
-<div class="line number9 index8 alt2">9</div>
-<div class="line number10 index9 alt1">10</div>
-<div class="line number11 index10 alt2">11</div>
-<div class="line number12 index11 alt1">12</div>
-<div class="line number13 index12 alt2">13</div>
-<div class="line number14 index13 alt1">14</div>
-<div class="line number15 index14 alt2">15</div>
-<div class="line number16 index15 alt1">16</div>
-<div class="line number17 index16 alt2">17</div>
-<div class="line number18 index17 alt1">18</div>
-<div class="line number19 index18 alt2">19</div>
-<div class="line number20 index19 alt1">20</div>
-<div class="line number21 index20 alt2">21</div>
-<div class="line number22 index21 alt1">22</div>
-</td>
-<td class="code">
-<div class="container">
-<div class="line number1 index0 alt2"><code class="js plain">server {</code></div>
-<div class="line number2 index1 alt1"><code class="js spaces">    </code><code class="js preprocessor"># 原先可以接受 IPv4 網路連線, 目前覆蓋為 comment</code></div>
-<div class="line number3 index2 alt2"><code class="js spaces">    </code><code class="js preprocessor">#listen       80;</code></div>
-<div class="line number4 index3 alt1"><code class="js spaces">    </code><code class="js preprocessor"># 設定接受 IPv6 網路連線</code></div>
-<div class="line number5 index4 alt2"><code class="js spaces">    </code><code class="js plain">listen [::]:80;</code></div>
-<div class="line number6 index5 alt1"><code class="js spaces">    </code><code class="js preprocessor"># 原先採 localhost 伺服器連線, 目前覆蓋為註解</code></div>
-<div class="line number7 index6 alt2"><code class="js spaces">    </code><code class="js preprocessor">#server_name  localhost;</code></div>
-<div class="line number8 index7 alt1"><code class="js spaces">    </code><code class="js preprocessor"># 只允許系上 IPv6 網路連線</code></div>
-<div class="line number9 index8 alt2"><code class="js spaces">    </code><code class="js plain">allow 2001:288:6004:17::0/32;</code></div>
-<div class="line number10 index9 alt1"><code class="js spaces">    </code><code class="js preprocessor"># 除系上網段外, 其餘網段均拒絕連線</code></div>
-<div class="line number11 index10 alt2"><code class="js spaces">    </code><code class="js plain">deny all;</code></div>
-<div class="line number12 index11 alt1"><code class="js spaces">    </code> </div>
-<div class="line number13 index12 alt2"><code class="js spaces">    </code><code class="js plain">location / {</code></div>
-<div class="line number14 index13 alt1"><code class="js spaces">        </code><code class="js preprocessor"># 網際根目錄</code></div>
-<div class="line number15 index14 alt2"><code class="js spaces">        </code><code class="js plain">root E:/downloads;</code></div>
-<div class="line number16 index15 alt1"><code class="js spaces">        </code><code class="js preprocessor"># 利用帳號密碼認證後才可連線</code></div>
-<div class="line number17 index16 alt2"><code class="js spaces">        </code><code class="js plain">auth_basic </code><code class="js string">"For Authorized Users Only!"</code><code class="js plain">;</code></div>
-<div class="line number18 index17 alt1"><code class="js spaces">        </code><code class="js plain">auth_basic_user_file C:/pj2022/nginx-1.20.2/.htpasswd; </code></div>
-<div class="line number19 index18 alt2"><code class="js spaces">    </code><code class="js plain">}</code></div>
-<div class="line number20 index19 alt1"><code class="js spaces">    </code><code class="js preprocessor"># 設定為列出各檔案與目錄的索引內容</code></div>
-<div class="line number21 index20 alt2"><code class="js spaces">    </code><code class="js plain">autoindex on;</code></div>
-<div class="line number22 index21 alt1"><code class="js plain">}</code></div>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<script>
-var winkVideoData = {
-  dataVersion: 1,
-  frameRate: 10,
-  buttonFrameLength: 5,
-  buttonFrameOffset: 2,
-  frameStops: {
-  },
-};
+    <div id="tipue_search_content">W13 << <a href='W13.html'>Previous</a> <a href='設定 nginx.html'>Next</a> >> 設定 nginx<br /><h1>W14</h1>
+<script src="./../cmsimde/static/brython.js">
 </script>
-<!-- 接下來將 mp4 檔案從 downloads 目錄取出 -->
-<div class="winkVideoContainerClass"><video autoplay="autoplay" class="winkVideoClass" controls="controls" data-dirname="./../cmsimde/static" data-varname="winkVideoData" height="630" muted="true" width="1008">
-<source src="./../downloads/nginx.mp4" type="video/mp4"/></video>
-<div class="winkVideoOverlayClass"></div>
-<div class="winkVideoControlBarClass"><button class="winkVideoControlBarPlayButtonClass"></button> <button class="winkVideoControlBarPauseButtonClass"></button>
-<div class="winkVideoControlBarProgressLeftClass"></div>
-<div class="winkVideoControlBarProgressEmptyMiddleClass"></div>
-<div class="winkVideoControlBarProgressRightClass"></div>
-<div class="winkVideoControlBarProgressFilledMiddleClass"></div>
-<div class="winkVideoControlBarProgressThumbClass"></div>
-</div>
-<div class="winkVideoPlayOverlayClass"></div>
-</div>
-<br />W14 << <a href='W14.html'>Previous</a> <a href='查驗 nginx 數位簽章.html'>Next</a> >> 查驗 nginx 數位簽章</div>
+<script src="./../cmsimde/static/brython_stdlib.js"></script>
+<!-- for ggame -->
+<p>
+<script src="./../cmsimde/static/jquery-3.3.1.min.js"></script>
+<script src="./../cmsimde/static/jquery-ui.1.12.1.min.js"></script>
+<script src="./../cmsimde/static/pixi-3.0.5.min.js"></script>
+<script src="./../cmsimde/static/buzz-1.2.1.js"></script>
+<script src="./../cmsimde/static/bs.js"></script>
+<script src="./../downloads/brython_modules.js"></script>
+</p>
+<!-- Cango 程式庫 -->
+<p>
+<script src="./../cmsimde/static/Cango-24v03-min.js"></script>
+<script src="./../cmsimde/static/CangoAxes-6v01-min.js"></script>
+<script src="./../cmsimde/static/gearUtils-09.js"></script>
+<script src="./../cmsimde/static/SVGpathUtils-6v03-min.js"></script>
+<script src="./../cmsimde/static/sylvester.js"></script>
+<script src="./../cmsimde/static/PrairieDraw.js"></script>
+</p>
+<!-- for Konva 程式庫 -->
+<p>
+<script src="./../cmsimde/static/konva.min.js"></script>
+<script>
+window.onload=function(){
+brython({debug:1, pythonpath:['./../cmsimde/static/','./../downloads/py/']});
+}
+</script>
+</p>
+<p><!-- 導入 FileSaver 與 filereader --></p>
+<p>
+<script src="/cmsimde/static/ace/FileSaver.min.js" type="text/javascript"></script>
+<script src="/cmsimde/static/ace/filereader.js" type="text/javascript"></script>
+</p>
+<p><!-- 導入 ace --></p>
+<p>
+<script src="./../cmsimde/static/ace/ace.js" type="text/javascript"></script>
+<script src="./../cmsimde/static/ace/ext-language_tools.js" type="text/javascript"></script>
+<script src="./../cmsimde/static/ace/mode-python3.js" type="text/javascript"></script>
+<script src="./../cmsimde/static/ace/snippets/python.js" type="text/javascript"></script>
+</p>
+<p><!-- 請注意, 這裡使用 Javascript 將 localStorage["py_src"] 中存在近端瀏覽器的程式碼, 由使用者決定存檔名稱--></p>
+<p>
+<script type="text/javascript">
+function doSave(storage_id, filename){
+    var blob = new Blob([localStorage[storage_id]], {type: "text/plain;charset=utf-8"});
+    filename = document.getElementById(filename).value
+    saveAs(blob, filename+".py");
+}
+</script>
+</p>
+<p></p>
+<p><!-- ######################  editor1 開始 ###################### --></p>
+<p><!-- 用來顯示程式碼的 editor 區域 --></p>
+<div id="kw_editor1" style="width: 600px; height: 300px;"></div>
+<p><!-- 以下的表單與按鈕與前面的 Javascript doSave 函式以及 FileSaver.min.js 互相配合 --></p>
+<p><!-- 存擋表單開始 --></p>
+<form><label>Filename: <input id="kw_filename" placeholder="input file name" type="text"/>.py</label> <input onclick="doSave('kw_py_src1', 'kw_filename1');" type="submit" value="Save"/></form>
+<p><!-- 存擋表單結束 --></p>
+<p></p>
+<p><!-- 執行與清除按鈕開始 --></p>
+<p><button id="kw_run1">Run</button> <button id="kw_show_console1">Output</button> <button id="kw_clear_console1">清除輸出區</button><button id="clear_bd1">清除繪圖區</button><button onclick="window.location.reload()">Reload</button></p>
+<p><!-- 執行與清除按鈕結束 --></p>
+<p></p>
+<p><!-- 程式執行 ouput 區 --></p>
+<div style="width: 100%; height: 100%;"><textarea autocomplete="off" id="kw_console1"></textarea></div>
+<p><!-- Brython 程式執行的結果, 都以 brython_div 作為切入位置 --></p>
+<p><!-- 這裡的畫布 id 為 brython_div --></p>
+<div id="brython_div"></div>
+<!-- graphics-column is for ggame -->
+<div class="col-md-0" height="1" id="graphics-column" width="1"></div>
+<p><!-- ######################  editor1 結束 ###################### --></p>
+<p><!-- 以下可以開始利用 editor1 的設定編寫對應 Brython 程式 -->
+<script type="text/python3">
+from browser import document as doc
+import ace
+
+# 清除畫布
+def clear_bd1(ev):
+    # 注意這裡清除的畫布 id 為 brython_div
+    bd = doc["brython_div"]
+    bd.clear()
+Ace1 = ace.Editor(editor_id="kw_editor1", console_id="kw_console1", container_id="kw__container1", storage_id="kw_py_src1" )
+# 從 gist 取出程式碼後, 放入 editor 作為 default 程式
+def run1():
+    # 利用 get 取下 src 變數值
+    try:
+        url = doc.query["src"]
+    except:
+        url = "https://gist.githubusercontent.com/s40723245/9a2abb77c3e7b064d400399b5852503f/raw/af763ab5473a9d26f8ee093ee7022a808a08b071/1a_stud.py"
+    prog = open(url).read()
+
+    # 將程式載入編輯區
+    Ace1.editor.setValue(prog)
+    Ace1.editor.scrollToRow(0)
+    Ace1.editor.gotoLine(0)
+    # 直接執行程式
+    #ns = {'__name__':'__main__'}
+    #exec(prog, ns)
+    # 按下 run 按鈕
+    Ace1.run()
+
+# 執行程式, 顯示輸出結果與清除輸出結果及對應按鈕綁定
+doc['kw_run1'].bind('click', Ace1.run)
+doc['kw_show_console1'].bind('click', Ace1.show_console)
+doc['kw_clear_console1'].bind('click', Ace1.clear_console)
+doc['clear_bd1'].bind('click', clear_bd1)
+# 呼叫函式執行
+run1()
+</script>
+<!-- 以上為內建程式, 頁面可透過 ?src=gist_url 執行 --></p>
+<!-- <script src="./../cmsimde/static/chimper/js/jquery-3.3.1.min.js"></script> -->
+<script src="./../cmsimde/static/chimper/js/jquery-migrate-3.0.1.min.js"></script>
+<script src="./../cmsimde/static/chimper/js/jquery-ui.js"></script>
+<script src="./../cmsimde/static/chimper/js/popper.min.js"></script>
+<script src="./../cmsimde/static/chimper/js/bootstrap.min.js"></script>
+<script src="./../cmsimde/static/chimper/js/owl.carousel.min.js"></script>
+<script src="./../cmsimde/static/chimper/js/jquery.stellar.min.js"></script>
+<script src="./../cmsimde/static/chimper/js/jquery.countdown.min.js"></script>
+<script src="./../cmsimde/static/chimper/js/jquery.magnific-popup.min.js"></script>
+<script src="./../cmsimde/static/chimper/js/bootstrap-datepicker.min.js"></script>
+<script src="./../cmsimde/static/chimper/js/aos.js"></script>
+<!--
+            <script src="./../cmsimde/static/chimper/js/typed.js"></script>
+                    <script>
+                    var typed = new Typed('.typed-words', {
+                    strings: ["Web Apps"," WordPress"," Mobile Apps"],
+                    typeSpeed: 80,
+                    backSpeed: 80,
+                    backDelay: 4000,
+                    startDelay: 1000,
+                    loop: true,
+                    showCursor: true
+                    });
+                    </script>
+            -->
+<script src="./../cmsimde/static/chimper/js/main.js"></script>
+<!-- 啟用 LaTeX equations 編輯 -->
+<p></p>
+<!-- <script>
+  MathJax = {
+    tex: {inlineMath: [['$', '$'], ['\(', '\)']]}
+  };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>-->
+<p></p>
+<br />W13 << <a href='W13.html'>Previous</a> <a href='設定 nginx.html'>Next</a> >> 設定 nginx</div>
         
     <!-- footer -->
       <div class="container">
