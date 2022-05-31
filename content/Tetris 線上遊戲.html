@@ -139,18 +139,191 @@ img.add_border {
           </div>
           
         </header>
-    <div id="tipue_search_content"> <a href='Week1~9.html'>Next</a> >> Week1~9<br /><h1>About</h1>
-<p>此內容管理系統以 <a href="https://github.com/mdecourse/cmsimde">https://github.com/mdecourse/cmsimde</a> 作為 submodule 運作, 可以選定對應的版本運作, cmsimde 可以持續改版, 不會影響之前設為 submodule, 使用舊版 cmsimde 模組的內容管理相關運作1</p>
-<h4>利用 cmsimde 建立靜態網誌方法:</h4>
-<p>1. 在 github 建立倉儲, git clone 到近端</p>
-<p>2. 參考 <a href="https://github.com/mdecourse/newcms">https://github.com/mdecourse/newcms</a>, 加入除了 cmsimde 目錄外的所有內容</p>
-<p>以 git submodule add <a href="https://github.com/mdecourse/cmsimde">https://github.com/mdecourse/cmsimde</a> cmsimde</p>
-<p>建立 cmsimde 目錄, 並從 github 取下子模組內容.</p>
-<p>3.在近端維護時, 更換目錄到倉儲中的 cmsimde, 以 python wsgi.py 啟動近端網際伺服器.</p>
-<p>動態內容編輯完成後, 以 generate_pages 轉為靜態內容, 以 git add commit 及 push 將內容推到遠端.</p>
-<p>4. 之後若要以 git clone 取下包含 submodule 的所有內容, 執行:</p>
-<p>git clone --recurse-submodules <a href="https://github.com/mdecourse/newcms.git">https://github.com/mdecourse/newcms.git</a></p>
-<br /> <a href='Week1~9.html'>Next</a> >> Week1~9</div>
+    <div id="tipue_search_content">W14 << <a href='W14.html'>Previous</a> <a href='設定 nginx.html'>Next</a> >> 設定 nginx<br /><h1>Tetris 線上遊戲</h1>
+<script src="./../cmsimde/static/brython.js">
+</script>
+<script src="./../cmsimde/static/brython_stdlib.js"></script>
+<!-- for ggame -->
+<p>
+<script src="./../cmsimde/static/jquery-3.3.1.min.js"></script>
+<script src="./../cmsimde/static/jquery-ui.1.12.1.min.js"></script>
+<script src="./../cmsimde/static/pixi-3.0.5.min.js"></script>
+<script src="./../cmsimde/static/buzz-1.2.1.js"></script>
+<script src="./../cmsimde/static/bs.js"></script>
+<script src="./../downloads/brython_modules.js"></script>
+</p>
+<!-- Cango 程式庫 -->
+<p>
+<script src="./../cmsimde/static/Cango-24v03-min.js"></script>
+<script src="./../cmsimde/static/CangoAxes-6v01-min.js"></script>
+<script src="./../cmsimde/static/gearUtils-09.js"></script>
+<script src="./../cmsimde/static/SVGpathUtils-6v03-min.js"></script>
+<script src="./../cmsimde/static/sylvester.js"></script>
+<script src="./../cmsimde/static/PrairieDraw.js"></script>
+</p>
+<!-- for Konva 程式庫 -->
+<p>
+<script src="./../cmsimde/static/konva.min.js"></script>
+<script>
+window.onload=function(){
+brython({debug:1, pythonpath:['./../cmsimde/static/','./../downloads/py/']});
+}
+</script>
+</p>
+<p><!-- 導入 FileSaver 與 filereader --></p>
+<p>
+<script src="/cmsimde/static/ace/FileSaver.min.js" type="text/javascript"></script>
+<script src="/cmsimde/static/ace/filereader.js" type="text/javascript"></script>
+</p>
+<p><!-- 導入 ace --></p>
+<p>
+<script src="./../cmsimde/static/ace/ace.js" type="text/javascript"></script>
+<script src="./../cmsimde/static/ace/ext-language_tools.js" type="text/javascript"></script>
+<script src="./../cmsimde/static/ace/mode-python3.js" type="text/javascript"></script>
+<script src="./../cmsimde/static/ace/snippets/python.js" type="text/javascript"></script>
+</p>
+<p><!-- 請注意, 這裡使用 Javascript 將 localStorage["py_src"] 中存在近端瀏覽器的程式碼, 由使用者決定存檔名稱--></p>
+<p>
+<script type="text/javascript">
+function doSave(storage_id, filename){
+    var blob = new Blob([localStorage[storage_id]], {type: "text/plain;charset=utf-8"});
+    filename = document.getElementById(filename).value
+    saveAs(blob, filename+".py");
+}
+</script>
+</p>
+<p><button id="cfrr">5 個紅點方塊</button><button id="tetris">Tetris</button></p>
+<p><!-- ######################  editor1 開始 ###################### --></p>
+<p><!-- 用來顯示程式碼的 editor 區域 --></p>
+<div id="kw_editor1" style="width: 600px; height: 300px;"></div>
+<p><!-- 以下的表單與按鈕與前面的 Javascript doSave 函式以及 FileSaver.min.js 互相配合 --></p>
+<p><!-- 存擋表單開始 --></p>
+<form><label>Filename: <input id="kw_filename" placeholder="input file name" type="text"/>.py</label> <input onclick="doSave('kw_py_src1', 'kw_filename1');" type="submit" value="Save"/></form>
+<p><!-- 存擋表單結束 --></p>
+<p></p>
+<p><!-- 執行與清除按鈕開始 --></p>
+<p><button id="kw_run1">Run</button> <button id="kw_show_console1">Output</button> <button id="kw_clear_console1">清除輸出區</button><button id="clear_bd1">清除繪圖區</button><button onclick="window.location.reload()">Reload</button></p>
+<p><!-- 執行與清除按鈕結束 --></p>
+<p></p>
+<p><!-- 程式執行 ouput 區 --></p>
+<div style="width: 100%; height: 100%;"><textarea autocomplete="off" id="kw_console1"></textarea></div>
+<p><!-- Brython 程式執行的結果, 都以 brython_div 作為切入位置 --></p>
+<p><!-- 這裡的畫布 id 為 brython_div --></p>
+<div id="brython_div"></div>
+<!-- graphics-column is for ggame -->
+<div class="col-md-0" height="1" id="graphics-column" width="1"></div>
+<p><!-- ######################  editor1 結束 ###################### --></p>
+<p><!-- 以下可以開始利用 editor1 的設定編寫對應 Brython 程式 -->
+<script type="text/python3">
+from browser import document as doc
+import ace
+
+# 清除畫布
+def clear_bd1(ev):
+    # 注意這裡清除的畫布 id 為 brython_div
+    bd = doc["brython_div"]
+    bd.clear()
+Ace1 = ace.Editor(editor_id="kw_editor1", console_id="kw_console1", container_id="kw__container1", storage_id="kw_py_src1" )
+# 從 gist 取出程式碼後, 放入 editor 作為 default 程式
+def run1():
+    # 利用 get 取下 src 變數值
+    try:
+        url = doc.query["src"]
+    except:
+        url = "https://gist.githubusercontent.com/s40723245/9a2abb77c3e7b064d400399b5852503f/raw/61ce009ef1d79175627ea02fb2a874844bd06b28/pygame_to_brython_tetris.py"
+    prog = open(url).read()
+
+    # 將程式載入編輯區
+    Ace1.editor.setValue(prog)
+    Ace1.editor.scrollToRow(0)
+    Ace1.editor.gotoLine(0)
+    # 直接執行程式
+    #ns = {'__name__':'__main__'}
+    #exec(prog, ns)
+    # 按下 run 按鈕
+    Ace1.run()
+
+# 執行程式, 顯示輸出結果與清除輸出結果及對應按鈕綁定
+doc['kw_run1'].bind('click', Ace1.run)
+doc['kw_show_console1'].bind('click', Ace1.show_console)
+doc['kw_clear_console1'].bind('click', Ace1.clear_console)
+doc['clear_bd1'].bind('click', clear_bd1)
+# 呼叫函式執行
+run1()
+</script>
+<!-- 以上為內建程式, 頁面可透過 ?src=gist_url 執行 --></p>
+<p><!-- add 1 to 100 開始 -->
+<script type="text/python3">
+from browser import document as doc
+import ace
+
+# 清除畫布
+def clear_bd1(ev):
+    bd = doc["brython_div1"]
+    bd.clear()
+
+# 利用 ace 中的 Editor 建立 Ace 物件, 其中的輸入變數分別對應到頁面中的編輯區物件
+Ace2 = ace.Editor(editor_id="kw_editor1", console_id="kw_console1", container_id="kw__container1", storage_id="kw_py_src1" )
+
+class button2:
+    def __init__(self, url):
+        self.url = url
+
+    # 記得加入 event 輸入變數
+    def do(self,ev):
+        Ace2.editor.setValue(open(self.url).read())
+        Ace2.editor.scrollToRow(0)
+        Ace2.editor.gotoLine(0)
+        Ace2.run()
+
+################################## chasing 5 red rect start
+# execute only one time
+cfrr_url = "https://gist.githubusercontent.com/s40723245/9a2abb77c3e7b064d400399b5852503f/raw/696cf8d02b53e6bc8816d18572777f88c3f23f4d/chasing_5_red_rect.py"
+cfrr = button2(cfrr_url)
+doc["cfrr"].bind("click", cfrr.do)
+################################## chasing 5 red rect end
+################################## tetris start
+tetris_url = "https://gist.githubusercontent.com/s40723245/9a2abb77c3e7b064d400399b5852503f/raw/61ce009ef1d79175627ea02fb2a874844bd06b28/pygame_to_brython_tetris.py"
+tetris = button2(tetris_url)
+doc["tetris"].bind("click", tetris.do)
+################################## tetris end
+</script>
+</p>
+<!-- <script src="./../cmsimde/static/chimper/js/jquery-3.3.1.min.js"></script> -->
+<script src="./../cmsimde/static/chimper/js/jquery-migrate-3.0.1.min.js"></script>
+<script src="./../cmsimde/static/chimper/js/jquery-ui.js"></script>
+<script src="./../cmsimde/static/chimper/js/popper.min.js"></script>
+<script src="./../cmsimde/static/chimper/js/bootstrap.min.js"></script>
+<script src="./../cmsimde/static/chimper/js/owl.carousel.min.js"></script>
+<script src="./../cmsimde/static/chimper/js/jquery.stellar.min.js"></script>
+<script src="./../cmsimde/static/chimper/js/jquery.countdown.min.js"></script>
+<script src="./../cmsimde/static/chimper/js/jquery.magnific-popup.min.js"></script>
+<script src="./../cmsimde/static/chimper/js/bootstrap-datepicker.min.js"></script>
+<script src="./../cmsimde/static/chimper/js/aos.js"></script>
+<!--
+            <script src="./../cmsimde/static/chimper/js/typed.js"></script>
+                    <script>
+                    var typed = new Typed('.typed-words', {
+                    strings: ["Web Apps"," WordPress"," Mobile Apps"],
+                    typeSpeed: 80,
+                    backSpeed: 80,
+                    backDelay: 4000,
+                    startDelay: 1000,
+                    loop: true,
+                    showCursor: true
+                    });
+                    </script>
+            -->
+<script src="./../cmsimde/static/chimper/js/main.js"></script>
+<!-- 啟用 LaTeX equations 編輯 -->
+<p></p>
+<!-- <script>
+  MathJax = {
+    tex: {inlineMath: [['$', '$'], ['\(', '\)']]}
+  };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>-->
+<p></p><br />W14 << <a href='W14.html'>Previous</a> <a href='設定 nginx.html'>Next</a> >> 設定 nginx</div>
         
     <!-- footer -->
       <div class="container">
