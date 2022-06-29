@@ -867,7 +867,263 @@ var winkVideoData = {
 <p><iframe height="600" src="https://s40723233.github.io/wcm2022/downloads/報告PDF.pdf" width="880"></iframe></p>
 <h1>Week 17</h1>
 <p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/dZulltb0lIg" width="560"></iframe></p>
-<h1>Develop</h1>
+<h1>期末報告1</h1>
+<script src="/static/brython.js">
+</script>
+<script src="/static/brython_stdlib.js"></script>
+<!-- for ggame -->
+<p>
+<script src="/static/jquery-3.3.1.min.js"></script>
+<script src="/static/jquery-ui.1.12.1.min.js"></script>
+<script src="/static/pixi-3.0.5.min.js"></script>
+<script src="/static/buzz-1.2.1.js"></script>
+<script src="/static/bs.js"></script>
+<script src="/downloads/brython_modules.js"></script>
+</p>
+<!-- Cango 程式庫 -->
+<p>
+<script src="/static/Cango-24v03-min.js"></script>
+<script src="/static/CangoAxes-6v01-min.js"></script>
+<script src="/static/gearUtils-09.js"></script>
+<script src="/static/SVGpathUtils-6v03-min.js"></script>
+<script src="/static/sylvester.js"></script>
+<script src="/static/PrairieDraw.js"></script>
+</p>
+<!-- for Konva 程式庫 -->
+<p>
+<script src="/static/konva.min.js"></script>
+<script>
+window.onload=function(){
+brython({debug:1, pythonpath:['/static/','./../downloads/py/']});
+}
+</script>
+</p>
+<p><!-- 導入 FileSaver 與 filereader --></p>
+<p>
+<script src="/cmsimde/static/ace/FileSaver.min.js" type="text/javascript"></script>
+<script src="/cmsimde/static/ace/filereader.js" type="text/javascript"></script>
+</p>
+<p><!-- 導入 ace --></p>
+<p>
+<script src="/static/ace/ace.js" type="text/javascript"></script>
+<script src="/static/ace/ext-language_tools.js" type="text/javascript"></script>
+<script src="/static/ace/mode-python3.js" type="text/javascript"></script>
+<script src="/static/ace/snippets/python.js" type="text/javascript"></script>
+</p>
+<p><!-- 請注意, 這裡使用 Javascript 將 localStorage["py_src"] 中存在近端瀏覽器的程式碼, 由使用者決定存檔名稱--></p>
+<p>
+<script type="text/javascript">
+function doSave(storage_id, filename){
+    var blob = new Blob([localStorage[storage_id]], {type: "text/plain;charset=utf-8"});
+    filename = document.getElementById(filename).value
+    saveAs(blob, filename+".py");
+}
+</script>
+</p>
+<p></p>
+<p><!-- ######################  editor1 開始 ###################### --></p>
+<p><!-- 用來顯示程式碼的 editor 區域 --></p>
+<div id="kw_editor1" style="width: 600px; height: 300px;"></div>
+<p><!-- 以下的表單與按鈕與前面的 Javascript doSave 函式以及 FileSaver.min.js 互相配合 --></p>
+<p><!-- 存擋表單開始 --></p>
+<form><label>Filename: <input id="kw_filename" placeholder="input file name" type="text"/>.py</label> <input onclick="doSave('kw_py_src1', 'kw_filename1');" type="submit" value="Save"/></form>
+<p><!-- 存擋表單結束 --></p>
+<p></p>
+<p><!-- 執行與清除按鈕開始 --></p>
+<p><button id="kw_run1">Run</button> <button id="kw_show_console1">Output</button> <button id="kw_clear_console1">清除輸出區</button><button id="clear_bd1">清除繪圖區</button><button onclick="window.location.reload()">Reload</button></p>
+<p><!-- 執行與清除按鈕結束 --></p>
+<p></p>
+<p><!-- 程式執行 ouput 區 --></p>
+<div style="width: 100%; height: 100%;"><textarea autocomplete="off" id="kw_console1"></textarea></div>
+<p><!-- Brython 程式執行的結果, 都以 brython_div 作為切入位置 --></p>
+<p><!-- 這裡的畫布 id 為 brython_div --></p>
+<div id="brython_div"></div>
+<!-- graphics-column is for ggame -->
+<div class="col-md-0" height="1" id="graphics-column" width="1"></div>
+<p><!-- ######################  editor1 結束 ###################### --></p>
+<p><!-- 以下可以開始利用 editor1 的設定編寫對應 Brython 程式 -->
+<script type="text/python3">
+from browser import document as doc
+import ace
+
+# 清除畫布
+def clear_bd1(ev):
+    # 注意這裡清除的畫布 id 為 brython_div
+    bd = doc["brython_div"]
+    bd.clear()
+Ace1 = ace.Editor(editor_id="kw_editor1", console_id="kw_console1", container_id="kw__container1", storage_id="kw_py_src1" )
+# 從 gist 取出程式碼後, 放入 editor 作為 default 程式
+def run1():
+    # 利用 get 取下 src 變數值
+    try:
+        url = doc.query["src"]
+    except:
+        url = "https://gist.githubusercontent.com/s40723233/167b61ac439949c114748cd58cbe6205/raw/48362c76077fd2d18af79ea12fa43c647801c337/40723233_fangeua"
+    prog = open(url).read()
+
+    # 將程式載入編輯區
+    Ace1.editor.setValue(prog)
+    Ace1.editor.scrollToRow(0)
+    Ace1.editor.gotoLine(0)
+    # 直接執行程式
+    #ns = {'__name__':'__main__'}
+    #exec(prog, ns)
+    # 按下 run 按鈕
+    Ace1.run()
+
+# 執行程式, 顯示輸出結果與清除輸出結果及對應按鈕綁定
+doc['kw_run1'].bind('click', Ace1.run)
+doc['kw_show_console1'].bind('click', Ace1.show_console)
+doc['kw_clear_console1'].bind('click', Ace1.clear_console)
+doc['clear_bd1'].bind('click', clear_bd1)
+# 呼叫函式執行
+run1()
+</script>
+<!-- 以上為內建程式, 頁面可透過 ?src=gist_url 執行 --></p>
+<!-- <script src="/static/chimper/js/jquery-3.3.1.min.js"></script> -->
+<script src="/static/chimper/js/jquery-migrate-3.0.1.min.js"></script>
+<script src="/static/chimper/js/jquery-ui.js"></script>
+<script src="/static/chimper/js/popper.min.js"></script>
+<script src="/static/chimper/js/bootstrap.min.js"></script>
+<script src="/static/chimper/js/owl.carousel.min.js"></script>
+<script src="/static/chimper/js/jquery.stellar.min.js"></script>
+<script src="/static/chimper/js/jquery.countdown.min.js"></script>
+<script src="/static/chimper/js/jquery.magnific-popup.min.js"></script>
+<script src="/static/chimper/js/bootstrap-datepicker.min.js"></script>
+<script src="/static/chimper/js/aos.js"></script>
+<script src="/static/chimper/js/main.js"></script>
+<p></p>
+<div class="winkVideoContainerClass"><video autoplay="autoplay" class="winkVideoClass" controls="controls" data-dirname="./../cmsimde/static" data-varname="winkVideoData" height="630" muted="true" width="1008">
+<source src="./../downloads/test_wink/1234.mp4" type="video/mp4"/></video></div>
+<p></p><h1>期末報告2</h1>
+<script src="/static/brython.js">
+</script>
+<script src="/static/brython_stdlib.js"></script>
+<!-- for ggame -->
+<p>
+<script src="/static/jquery-3.3.1.min.js"></script>
+<script src="/static/jquery-ui.1.12.1.min.js"></script>
+<script src="/static/pixi-3.0.5.min.js"></script>
+<script src="/static/buzz-1.2.1.js"></script>
+<script src="/static/bs.js"></script>
+<script src="/downloads/brython_modules.js"></script>
+</p>
+<!-- Cango 程式庫 -->
+<p>
+<script src="/static/Cango-24v03-min.js"></script>
+<script src="/static/CangoAxes-6v01-min.js"></script>
+<script src="/static/gearUtils-09.js"></script>
+<script src="/static/SVGpathUtils-6v03-min.js"></script>
+<script src="/static/sylvester.js"></script>
+<script src="/static/PrairieDraw.js"></script>
+</p>
+<!-- for Konva 程式庫 -->
+<p>
+<script src="/static/konva.min.js"></script>
+<script>
+window.onload=function(){
+brython({debug:1, pythonpath:['/static/','./../downloads/py/']});
+}
+</script>
+</p>
+<p><!-- 導入 FileSaver 與 filereader --></p>
+<p>
+<script src="/cmsimde/static/ace/FileSaver.min.js" type="text/javascript"></script>
+<script src="/cmsimde/static/ace/filereader.js" type="text/javascript"></script>
+</p>
+<p><!-- 導入 ace --></p>
+<p>
+<script src="/static/ace/ace.js" type="text/javascript"></script>
+<script src="/static/ace/ext-language_tools.js" type="text/javascript"></script>
+<script src="/static/ace/mode-python3.js" type="text/javascript"></script>
+<script src="/static/ace/snippets/python.js" type="text/javascript"></script>
+</p>
+<p><!-- 請注意, 這裡使用 Javascript 將 localStorage["py_src"] 中存在近端瀏覽器的程式碼, 由使用者決定存檔名稱--></p>
+<p>
+<script type="text/javascript">
+function doSave(storage_id, filename){
+    var blob = new Blob([localStorage[storage_id]], {type: "text/plain;charset=utf-8"});
+    filename = document.getElementById(filename).value
+    saveAs(blob, filename+".py");
+}
+</script>
+</p>
+<p></p>
+<p><!-- ######################  editor1 開始 ###################### --></p>
+<p><!-- 用來顯示程式碼的 editor 區域 --></p>
+<div id="kw_editor1" style="width: 600px; height: 300px;"></div>
+<p><!-- 以下的表單與按鈕與前面的 Javascript doSave 函式以及 FileSaver.min.js 互相配合 --></p>
+<p><!-- 存擋表單開始 --></p>
+<form><label>Filename: <input id="kw_filename" placeholder="input file name" type="text"/>.py</label> <input onclick="doSave('kw_py_src1', 'kw_filename1');" type="submit" value="Save"/></form>
+<p><!-- 存擋表單結束 --></p>
+<p></p>
+<p><!-- 執行與清除按鈕開始 --></p>
+<p><button id="kw_run1">Run</button> <button id="kw_show_console1">Output</button> <button id="kw_clear_console1">清除輸出區</button><button id="clear_bd1">清除繪圖區</button><button onclick="window.location.reload()">Reload</button></p>
+<p><!-- 執行與清除按鈕結束 --></p>
+<p></p>
+<p><!-- 程式執行 ouput 區 --></p>
+<div style="width: 100%; height: 100%;"><textarea autocomplete="off" id="kw_console1"></textarea></div>
+<p><!-- Brython 程式執行的結果, 都以 brython_div 作為切入位置 --></p>
+<p><!-- 這裡的畫布 id 為 brython_div --></p>
+<div id="brython_div"></div>
+<!-- graphics-column is for ggame -->
+<div class="col-md-0" height="1" id="graphics-column" width="1"></div>
+<p><!-- ######################  editor1 結束 ###################### --></p>
+<p><!-- 以下可以開始利用 editor1 的設定編寫對應 Brython 程式 -->
+<script type="text/python3">
+from browser import document as doc
+import ace
+
+# 清除畫布
+def clear_bd1(ev):
+    # 注意這裡清除的畫布 id 為 brython_div
+    bd = doc["brython_div"]
+    bd.clear()
+Ace1 = ace.Editor(editor_id="kw_editor1", console_id="kw_console1", container_id="kw__container1", storage_id="kw_py_src1" )
+# 從 gist 取出程式碼後, 放入 editor 作為 default 程式
+def run1():
+    # 利用 get 取下 src 變數值
+    try:
+        url = doc.query["src"]
+    except:
+        url = "https://gist.githubusercontent.com/s40723233/167b61ac439949c114748cd58cbe6205/raw/dbd444d714e16f6525fd0b8b6c54a6ab2b404702/40723233_final"
+    prog = open(url).read()
+
+    # 將程式載入編輯區
+    Ace1.editor.setValue(prog)
+    Ace1.editor.scrollToRow(0)
+    Ace1.editor.gotoLine(0)
+    # 直接執行程式
+    #ns = {'__name__':'__main__'}
+    #exec(prog, ns)
+    # 按下 run 按鈕
+    Ace1.run()
+
+# 執行程式, 顯示輸出結果與清除輸出結果及對應按鈕綁定
+doc['kw_run1'].bind('click', Ace1.run)
+doc['kw_show_console1'].bind('click', Ace1.show_console)
+doc['kw_clear_console1'].bind('click', Ace1.clear_console)
+doc['clear_bd1'].bind('click', clear_bd1)
+# 呼叫函式執行
+run1()
+</script>
+<!-- 以上為內建程式, 頁面可透過 ?src=gist_url 執行 --></p>
+<!-- <script src="/static/chimper/js/jquery-3.3.1.min.js"></script> -->
+<script src="/static/chimper/js/jquery-migrate-3.0.1.min.js"></script>
+<script src="/static/chimper/js/jquery-ui.js"></script>
+<script src="/static/chimper/js/popper.min.js"></script>
+<script src="/static/chimper/js/bootstrap.min.js"></script>
+<script src="/static/chimper/js/owl.carousel.min.js"></script>
+<script src="/static/chimper/js/jquery.stellar.min.js"></script>
+<script src="/static/chimper/js/jquery.countdown.min.js"></script>
+<script src="/static/chimper/js/jquery.magnific-popup.min.js"></script>
+<script src="/static/chimper/js/bootstrap-datepicker.min.js"></script>
+<script src="/static/chimper/js/aos.js"></script>
+<script src="/static/chimper/js/main.js"></script>
+<p></p>
+<div class="winkVideoContainerClass"><video autoplay="autoplay" class="winkVideoClass" controls="controls" data-dirname="./../cmsimde/static" data-varname="winkVideoData" height="630" muted="true" width="1008">
+<source src="./../downloads/test_wink/123.mp4" type="video/mp4"/></video></div>
+<p></p><h1>Develop</h1>
 <p><a href="https://github.com/mdecourse/cmsimde">https://github.com/mdecourse/cmsimde</a> 的開發, 可以在一個目錄中放入 cmsimde, 然後將 up_dir 中的內容放到與 cmsimde 目錄同位階的地方, 使用 command 進入 cmsimde 目錄, 執行 python wsgi.py, 就可以啟動, 以瀏覽器 https://localhost:9443 就可以連接, 以 admin 作為管理者密碼, 就可以登入維護內容.</p>
 <p>cmsimde 的開發採用 Leo Editor, 開啟 cmsimde 目錄中的 cmsimde.leo 就可以進行程式修改, 結束後, 若要保留網際內容, 只要將 cmsimde 外部的內容倒回 up_dir 目錄中即可後續對 cmsimde 遠端倉儲進行改版.</p>
 <p>init.py 位於  up_dir 目錄, 可以設定 site_title 與 uwsgi 等變數.</p>
